@@ -1,0 +1,141 @@
+<html>
+  <head>
+	<style>
+	.wrapper {
+		display: grid;
+		grid-gap: 10px;
+		grid-template-columns: repeat(3, 300px);
+		grid-auto-rows: 100px;
+	}
+	.item {
+		background-color: #EDF7FF;
+		border: 2px solid;
+		border-radius: 10px 10px 10px 10px;
+	}
+    </style>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+		//grid-auto-flow: column;
+		//grid-auto-columns: 300px 100px;
+      //function getFileData() {
+
+ 	//}
+ 
+	function drawChart() {
+    		var data = null;
+    		var chart = null;
+    		var options = {
+        		title: '',
+        		curveType: 'function',
+        		legend: { position: 'in' },
+                        width: 800,
+                        height: 300,
+        		hAxis: {title: ''},
+        		vAxis: {title: ''},
+			animation: {
+				startup: true,
+				duration: 800,
+				easing: 'inAndOut'
+			}
+    		};
+    		var defaultDataArray = [];
+     
+    		// タイトルの設定
+    		this.SetTitle = function(title){
+        		options.title = title;
+    		}
+ 
+    		// 各軸名の設定
+    		this.SetAxisTitle = function(xtitle,ytitle){
+        		options.hAxis.title = xtitle;
+        		options.vAxis.title = ytitle;
+    		}
+ 
+    		// 初期データ配列の設定
+    		this.SetDefaultDataArray = function(data){
+        		defaultDataArray = data;
+    		}
+ 
+    		// setOnLoadCallbackにセットするメソッド(関数を返す)
+    		this.Get = function(){
+        		return function(){
+            			data = google.visualization.arrayToDataTable(defaultDataArray);
+            			chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            			chart.draw(data, options);
+        		}
+    		}
+     
+    		// 値の更新＆再描画
+    		this.Update = function(newData){
+        		data = google.visualization.arrayToDataTable(newData);
+        		chart.draw(data, options);
+    		}
+	}
+ 
+	var dc = new drawChart();
+	dc.SetTitle('Performance Chart');
+	dc.SetAxisTitle('Sec',"Downloaded Size");
+	dc.SetDefaultDataArray(function(){
+   	var wd = [];
+   	wd.push(['Sec', 'Kbyte', 'Signal']);
+   	for(var i=0;i<=12;i++){
+      		wd.push([i.toString(),0.0, 0.0]);
+   	}
+   	return wd;
+	}());
+ 
+	// Load the Visualization API and the corechart package.
+	google.charts.load('current', {'packages':['corechart']});
+	// Set a callback to run when the Google Visualization API is loaded.
+	google.charts.setOnLoadCallback(dc.Get());
+    </script>
+  </head>
+  <body>
+	<input type="file" multipule id="hoge"><br/>
+	<div id="result">Inital text</div>
+	<div id="chart_div" style="width: 100%; height: 500px;"></div>
+	<script>
+		var element  = document.getElementById("hoge");
+		var resultElement = document.getElementById("result");
+		var fileReader = new FileReader();
+		var readDataArray = [];
+		var graphValues = [];
+		graphValues.push(['Sec', 'Kbyte']);
+
+		element.onchange = function () {
+			resultElement.textContent = "Initial text";
+			var file = element.files[0];
+			fileReader.readAsText(file);
+		}
+
+		fileReader.onload = function (event) {
+			//resultElement.textContent = fileReader.result;
+			readDataArray = fileReader.result.split(',');
+			readDataArray.forEach(function(element, index){
+				if (index > 10 ){
+					//resultElement.textContent = element.split(':');
+					graphValues.push(element.split(':').map(Number).slice(0, 2));
+					
+				}
+				
+			});
+                        console.log(graphValues);
+			dc.Update(graphValues);
+		}
+	var lastError;
+	</script>
+
+	<div class="wrapper">
+		<div class="item">One</div>
+		<div class="item">Two</div>
+		<div class="item">Three</div>
+		<div class="item">Four</div>
+		<div class="item">Five</div>
+		<div class="item">Six</div>
+	</div>
+
+  </body>
+</html>
