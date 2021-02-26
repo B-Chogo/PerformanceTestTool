@@ -5,7 +5,7 @@
 		display: grid;
 		grid-gap: 10px;
 		grid-template-columns: repeat(3, 300px);
-		grid-auto-rows: 100px;
+		grid-auto-rows: 300px;
 	}
 	.item {
 		background-color: #EDF7FF;
@@ -14,6 +14,7 @@
 	}
     </style>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="prototype.js"></script>
     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
@@ -23,6 +24,7 @@
       //function getFileData() {
 
  	//}
+
  
 	function drawChart() {
     		var data = null;
@@ -133,17 +135,25 @@
 			performanceData["TimeLine"] = graphValues;
             console.log(performanceData);
 			dc.Update(graphValues);
+
+			var text = "";
+			dataTitle.forEach(function(elem, index){
+				if (index===10){ return;}
+				text += elem + ": " + performanceData[elem] + "\r\n";
+			});
+            console.log(text);
+			document.getElementById("item1").innerText = text;
 		}
 	var lastError;
 	</script>
 
 	<div class="wrapper">
-		<div class="item">One</div>
-		<div class="item">Two</div>
-		<div class="item">Three</div>
-		<div class="item">Four</div>
-		<div class="item">Five</div>
-		<div class="item">Six</div>
+		<div class="item" id="item1">One</div>
+		<div class="item item1">Two</div>
+		<div class="item item2">Three</div>
+		<div class="item item3">Four</div>
+		<div class="item item4">Five</div>
+		<div class="item item5">Six</div>
 	</div>
 
   </body>
